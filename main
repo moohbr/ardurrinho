@@ -2,58 +2,35 @@
 
 */
 
-// Bibliotecas
-
-// Define's para a escrita do codigo ficar mais legivel e facil
-#define PINO_TRIGGER_SENSOR1 7 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR1    6 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_TRIGGER_SENSOR2 4 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR2    5 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-
-// Configurar as portas como entrada e saídas
-pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
-pinMode(PINO_ECHO_SENSOR1,     INPUT); // Ativa o pino 6 como entrada (conta o tempo/echo)
-pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
-pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
-
-// Ativar interrupção
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
-
-// Variaveis de leitura
-void variaveis(){
-  int borda1    = 0; // Variavel para guardar o valor novo da borda do sensor 1
-  int borda1ant = 0; // Variavel para guardar o valor velho da borda do sensor 1
-  int borda2    = 0; // Variavel para guardar o valor novo da borda do sensor 2
-  int borda2ant = 0; // Variavel para guardar o valor velho da borda do sensor 2
-  int contador1 = 0; // Variavel para contar o tempo que o ECHO ficou ativo no sensor 1
-  int contador2 = 0; // Variavel para contar o tempo que o ECHO ficou ativo no sensor 2
-}
-
-void conta1(){
+void conta1()
+{
   delayMicroseconds(4); // Conta 4 microsegundos
   contador1++;          // Conta o numero de vezes que passou pela funcao
   
 }
 
-void conta2(){
+void conta2()
+{
   delayMicroseconds(4); // Conta 4 microsegundos
   contador2++;          // Conta o numero de vezes que passou pela funcao
 }
 
-void pulsa_sensor1(){
+void pulsa_sensor1()
+{
   digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // Ativa o pino 7, triggando o sensor 1
   delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
   digitalWrite(PINO_TRIGGER_SENSOR1, LOW);    // Desativa o pino 7, destriggando o sensor 1 
 }
 
-void pulsa_sensor2(){
+void pulsa_sensor2()
+{
   digitalWrite(PINO_TRIGGER_SENSOR2, HIGH);   // Ativa o pino 4, triggando o sensor 1
   delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
   digitalWrite(PINO_TRIGGER_SENSOR2, LOW);    // Desativa o pino 4, destriggando o sensor 1 
 }
 
-void borda_sensor1(){ 
+void borda_sensor1()
+{ 
   borda1 = digitalRead(PINO_ECHO_SENSOR1); // Ler o pino ECHO
   if ((borda1ant == 0) && (borda1 == 1)){  // Se ouve borda de subida
     borda1ant = borda1;                    // Salva que ouve borda de subida
@@ -66,30 +43,81 @@ void borda_sensor1(){
 }
 
 void borda_sensor2()
-  borda2 = digitalRead(PINO_ECHO_SENSOR2);
-  if ((borda2ant == 0) && (borda2 == 1)){
-    borda2ant = borda2;
-    conta2;
+{
+  borda2 = digitalRead(PINO_ECHO_SENSOR2); // Ler o pino ECHO
+  if ((borda2ant == 0) && (borda2 == 1)){  // Se ouve borda de subida
+    borda2ant = borda2;                    // Salva que ouve borda de subida
+    conta2;                                // Conta o tON de ECHO
   else
-    if (borda2ant == 1) && (borda2 == 0)){
-      calcula2;      
+    if (borda2ant == 1) && (borda2 == 0)){ // Se ouve borda de descida
+      calcula2;                            // Calcula o tON de echo
     }
   }
 }
 
-void calcula1(){
+void calcula1()
+{
+  contador1*4      = tempo1       // em microsegundos
+  tempo1*340       = distancia1  // em cm
+  contador1        = 0          // reinicia a contagem
+}
+
+void calcula2()
+{
+  contador2*4  = tempo2       // em microsegundos
+  tempo2*340   = distancia2  // em cm
+  contador2    = 0      // reinicia a contagem
+}
+
+void motor_esquerdo()
+{
 
 }
 
-void calcula2(){
+void motor_direito()
+{
+  
+}
+
+void setup() 
+{
+// Bibliotecas
+
+  
+// Define's para a escrita do codigo ficar mais legivel e facil
+#define PINO_TRIGGER_SENSOR1     02 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR1        04 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_TRIGGER_SENSOR2     07 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR2        08 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_VCC_MOTOR_ESQUERDO  03 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_VCC_MOTOR_DIREITO   05 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_ESQUERDO  06 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_DIREITO   09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+
+// Configurar as portas como entrada e saídas
+pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR1,     INPUT); // Ativa o pino 6 como entrada (conta o tempo/echo)
+pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
+
+// Ativar interrupção
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
+
+// Variaveis auxiliares
+int borda1      = 0;      // Variavel para guardar o valor novo da borda do sensor 1
+int borda1ant   = 0;      // Variavel para guardar o valor velho da borda do sensor 1
+int borda2      = 0;      // Variavel para guardar o valor novo da borda do sensor 2
+int borda2ant   = 0;      // Variavel para guardar o valor velho da borda do sensor 2
+int contador1   = 0;      // Variavel para contar o tempo que o ECHO ficou ativo no sensor 1
+int contador2   = 0;      // Variavel para contar o tempo que o ECHO ficou ativo no sensor 2
+int tempo1      = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 1
+int tempo2      = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 2
 
 }
 
-void setup() {
-    
-}
-
-void loop() {
+void loop() 
+{
 
     
     
