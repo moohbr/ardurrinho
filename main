@@ -1,0 +1,26 @@
+/*
+
+*/
+
+// Bibliotecas
+#include <Ultrasonic.h> // Biblioteca especifica para utilizar comandos de Sensores Ultrassonicos
+
+//Defines para a escrita do codigo ficar mais legivel e facil
+#define PINO_TRIGGER_SENSOR1 7
+#define PINO_ECHO_SENSOR1    6 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_TRIGGER_SENSOR2 4
+#define PINO_ECHO_SENSOR2    5 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+
+// Configurar as portas como entrada e saídas
+
+
+//Inicializa o sensor ultrasonico nos pinos especificados
+Ultrasonic ultrasonic(PINO_TRIGGER_SENSOR1, PINO_ECHO_SENSOR1);
+
+void setup() {
+    
+}
+
+void loop() {
+    
+}
