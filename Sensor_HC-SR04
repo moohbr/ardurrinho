@@ -1,0 +1,33 @@
+Esse arquivo é uma documentação de referencia do sensor ultrassonico HC-SR04 para caso haja duvidas do funcionamento do mesmo.
+
+Referencias: https://datasheetspdf.com/pdf-file/1291829/Cytron/HC-SR04/1
+https://docplayer.com.br/65375384-Sensor-ultrassom-hc-sr04.html (para quem não sabe ler datasheet e/ou inglês)
+
+Eu fiz um pequeno resumo de algumas informações para auxiliar o projeto. É apenas recortes dos sites, porém já auxilia muito.
+Caso seja necessario a produção de um relatório, isso ajudará demais.
+
+Especificações:
+Power Supply :+5V DC
+Working Currnt: 15mA
+Ranging Distance : 2cm – 400 cm
+Resolution : 0.3 cm
+Measuring Angle: 30 degree
+Trigger Input Pulse width: 10uS
+Ultrasonic Frequency 40 kHz
+
+Nomeclatura:
+VCC = +5VDC
+Trig = Trigger input of Sensor
+Echo = Echo output of Sensor
+GND = GND
+
+Operação:
+The timing diagram of HCSR04 is shown. To start measurement, Trig of SR04 must receive a
+pulse of high (5V) for at least 10us, this will initiate the sensor will transmit out 8 cycle of ultrasonic
+burst at 40kHz and wait for the reflected ultrasonic burst. When the sensor detected ultrasonic from
+receiver, it will set the Echo pin to high (5V) and delay for a period (width) which proportion to
+distance. To obtain the distance, measure the width (Ton) of Echo pin.
+Time = Width of Echo pulse, in uS (micro second)
+● Distance in centimeters = Time / 58
+● Distance in inches = Time / 148
+● Or you can utilize the speed of sound, which is 340m/s
