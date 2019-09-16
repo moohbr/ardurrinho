@@ -31,13 +31,13 @@ void variaveis(){
 }
 
 void conta1(){
-  delayMicroseconds(4); // Conta 4 milisegundos
+  delayMicroseconds(4); // Conta 4 microsegundos
   contador1++;          // Conta o numero de vezes que passou pela funcao
   
 }
 
 void conta2(){
-  delayMicroseconds(4); // Conta 4 milisegundos
+  delayMicroseconds(4); // Conta 4 microsegundos
   contador2++;          // Conta o numero de vezes que passou pela funcao
 }
 
