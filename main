@@ -1,3 +1,46 @@
+/*
+
+*/
+
+// Bibliotecas
+
+// Define's para a escrita do codigo ficar mais legivel e facil
+#define PINO_TRIGGER_SENSOR1 7 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR1    6 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_TRIGGER_SENSOR2 4 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR2    5 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+
+// Configurar as portas como entrada e saídas
+pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR1,     INPUT); // Ativa o pino 6 como entrada (conta o tempo/echo)
+pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
+
+// Ativar interrupção
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
+
+// Variaveis de leitura
+void variaveis(){
+  int borda1    = 0; // Variavel para guardar o valor novo da borda do sensor 1
+  int borda1ant = 0; // Variavel para guardar o valor velho da borda do sensor 1
+  int borda2    = 0; // Variavel para guardar o valor novo da borda do sensor 2
+  int borda2ant = 0; // Variavel para guardar o valor velho da borda do sensor 2
+  int contador1 = 0; // Variavel para contar o tempo que o ECHO ficou ativo no sensor 1
+  int contador2 = 0; // Variavel para contar o tempo que o ECHO ficou ativo no sensor 2
+}
+
+void conta1(){
+  delayMicroseconds(4); // Conta 4 milisegundos
+  contador1++;          // Conta o numero de vezes que passou pela funcao
+  
+}
+
+void conta2(){
+  delayMicroseconds(4); // Conta 4 milisegundos
+  contador2++;          // Conta o numero de vezes que passou pela funcao
+}
+
 void pulsa_sensor1(){
   digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // Ativa o pino 7, triggando o sensor 1
   delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
