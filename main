@@ -5,31 +5,54 @@
 // Bibliotecas
 
 // Define's para a escrita do codigo ficar mais legivel e facil
-#define PINO_TRIGGER_SENSOR1 7 // TRIGGER É O PINO QUE ATIVA O SENSOR, FORÇANDO A PULSAR, EMITINDO O ''SOM''
+#define PINO_TRIGGER_SENSOR1 7
 #define PINO_ECHO_SENSOR1    6 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_TRIGGER_SENSOR2 4 // TRIGGER É O PINO QUE ATIVA O SENSOR, FORÇANDO A PULSAR, EMITINDO O ''SOM''
+#define PINO_TRIGGER_SENSOR2 4
 #define PINO_ECHO_SENSOR2    5 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
 
 // Configurar as portas como entrada e saídas
-pinMode(7, OUTPUT); // ativa o pino 7 como saída (ativa o sensor/trigger)
-pinMode(6, INPUT);  // ativa o pino 6 como entrada (conta o tempo/echo)
-pinMode(4, OUTPUT); // ativa o pino 4 como saída (ativa o sensor/trigger)
-pinMode(5, INPUT);  // ativa o pino 5 como entrada (conta o tempo/echo)
+pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR1, INPUT);     // Ativa o pino 6 como entrada (conta o tempo/echo)
+pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR2, INPUT);     // Ativa o pino 5 como entrada (conta o tempo/echo)
 
-// Inicializa o sensor ultrasonico nos pinos especificados
+// Ativar interrupção
+attachInterrupt(PINO_ECHO_SENSOR1, conta1,RISING); // Ativa interrupção no sensor 1
+attachInterrupt(PINO_ECHO_SENSOR2, conta2, RISING); // Ativa interrupção no sensor 2
+
+// Variaveis de leitura
+void variaveis(){
+  int borda1    = 0; // Variavel para guardar o valor novo da borda do sensor 1
+  int borda1ant = 0; // Variavel para guardar o valor velho da borda do sensor 1
+}
+
+void conta1(){
+  
+}
+
+void conta2(){
+  
+}
 
 void pulsa_sensor1(){
-  digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // ativa o pino 7, triggando o sensor 1
-  delayMicroseconds(10);                      // ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
-  digitalWrite(PINO_TRIGGER_SENSOR1, LOW);    // desativa o pino 7, destriggando o sensor 1 
+  digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // Ativa o pino 7, triggando o sensor 1
+  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
+  digitalWrite(PINO_TRIGGER_SENSOR1, LOW);    // Desativa o pino 7, destriggando o sensor 1 
 }
 
 void pulsa_sensor2(){
-  digitalWrite(PINO_TRIGGER_SENSOR2, HIGH);   // ativa o pino 4, triggando o sensor 2
-  delayMicroseconds(10);                      // ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
-  digitalWrite(PINO_TRIGGER_SENSOR2, LOW);    // desativa o pino 4, destriggando o sensor 2 
+  digitalWrite(PINO_TRIGGER_SENSOR2, HIGH);   // Ativa o pino 4, triggando o sensor 1
+  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
+  digitalWrite(PINO_TRIGGER_SENSOR2, LOW);    // Desativa o pino 4, destriggando o sensor 1 
 }
 
+void borda_sensor1(){
+  
+  borda1 = digitalRead(PINO_ECHO_SENSOR1);
+  if (borda1=!borda1ant){
+  
+  }
+}
 void setup() {
     
 }
