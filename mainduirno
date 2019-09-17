@@ -1,0 +1,119 @@
+/*
+
+*/
+
+void conta1()
+{
+  tempo1 = pulseIn(PINO_ECHO_SENSOR1, HIGH) // Conta o tON de echo em microsegundos
+  
+}
+
+void conta2()
+{
+  tempo2 = pulseIn(PINO_ECHO_SENSOR2, HIGH) // Conta o tON de echo em microsegundos
+}
+
+void pulsa_sensor1()
+{
+  digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // Ativa o pino 7, triggando o sensor 1
+  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
+  digitalWrite(PINO_TRIGGER_SENSOR1, LOW);    // Desativa o pino 7, destriggando o sensor 1 
+}
+
+void pulsa_sensor2()
+{
+  digitalWrite(PINO_TRIGGER_SENSOR2, HIGH);   // Ativa o pino 4, triggando o sensor 1
+  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
+  digitalWrite(PINO_TRIGGER_SENSOR2, LOW);    // Desativa o pino 4, destriggando o sensor 1 
+}
+
+void calcula1()
+{
+  tempo1*0.034029      = distancia1  // em cm
+}
+
+void calcula2()
+{
+  tempo2*0.0340290   = distancia2  // em cm
+
+}
+
+void motor_esquerda()
+{
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade)
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)
+}
+
+void motor_direita()
+{
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade)
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0) 
+}
+
+void motor_frente()
+{
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade)
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0) 
+}
+
+void motor_para()
+{
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0)
+}
+
+void motor_re()
+{
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade)
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)
+}
+
+void setup() 
+{
+// Bibliotecas
+
+  
+// Define's para a escrita do codigo ficar mais legivel e facil
+#define PINO_TRIGGER_SENSOR1     02 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR1        04 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_TRIGGER_SENSOR2     07 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR2        08 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_VCC_MOTOR_ESQUERDO  03 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_VCC_MOTOR_DIREITO   05 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_ESQUERDO  06 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_DIREITO   09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+
+// Configurar as portas como entrada e saídas
+pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR1,     INPUT); // Ativa o pino 6 como entrada (conta o tempo/echo)
+pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
+pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
+
+// Ativar interrupção
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
+attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
+
+// Variaveis auxiliares
+int tempo1       = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 1
+int tempo2       = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 2
+int velocidade   = 0;      // Variavel para determinar a velocidade a qual os motores rodarao
+float distancia1 = 0;      // Variavel para receber a distancia do objeto do sensor 1
+float distancia2 = 0;      // Variavel para receber a distancia do objeto do sensor 2
+}
+
+void loop() 
+{
+
+    
+    
+}
