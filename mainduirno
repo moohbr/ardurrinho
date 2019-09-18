@@ -1,6 +1,36 @@
-/*
+/* Versão 1.0 Ardurrinho
 
+Testes realizados
+0 - 18/09/19
+----------------
+
+Programadores:
+Mateus Alves
+Matheus Araujo
+----------------
+
+Disponivel em: https://github.com/moohbr/ardurrinho/blob/master/mainduirno
 */
+
+void escolhe()
+{
+  if ((distancia1<50)&&(distancia2<50)
+  {
+    escolhedor = 00
+  }
+  if (distancia1<50)&&(distancia2>50)
+  {
+    escolhedor = 01
+  }
+  if (distancia1>50)&&(distancia2<50)
+  {
+    escolhedor = 10
+  }
+  if (distancia1>50)&&(distancia2>50)
+  {
+    escolhedor = 11
+  }
+}
 
 void conta1()
 {
@@ -116,12 +146,34 @@ int tempo2       = 0;      // Variavel para receber o tempo que o ECHO ficou ati
 int velocidade   = 0;      // Variavel para determinar a velocidade a qual os motores rodarao
 float distancia1 = 0;      // Variavel para receber a distancia do objeto do sensor 1
 float distancia2 = 0;      // Variavel para receber a distancia do objeto do sensor 2
+int escolhedor   = 0;      // Variavel para escolher o que os motores irão fazer
 }
 
 void loop() 
 {
  pulsa_sensor1();
  pulsa_sensor2();
+ escolhe();
  
+ switch (escolhedor)
+ {
+   case 00
+   motor_para();
+   delay(500);
+   motor_re();
+   break
+   
+   case 01
+   motor_direita();
+   break
+   
+   case 10
+   motor_esquerda();
+   break
+   
+   case 11
+   motor_frente();
+   break
+ }
     
 }
