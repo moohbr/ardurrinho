@@ -12,36 +12,42 @@ Matheus Araujo
 Disponivel em: https://github.com/moohbr/ardurrinho/blob/master/mainduirno
 */
 
+// Escolhe o que o motor irá fazer, de acordo com as distancias dos sensores
+// Foi usado a logica de bits para definir os motores
+// 00 = dois desligados
+// 01 = Só da direita e por ai vai
 void escolhe()
 {
-  if ((distancia1<50)&&(distancia2<50)
+  if ((distancia1<50)&&(distancia2<50) // Se tiver perto dos dois sensores
   {
-    escolhedor = 00
+    escolhedor = 00 // para
   }
-  if (distancia1<50)&&(distancia2>50)
+  if (distancia1<50)&&(distancia2>50) // Se tiver perto do sensor 1
   {
-    escolhedor = 01
+    escolhedor = 01 // vira a direita 
   }
-  if (distancia1>50)&&(distancia2<50)
+  if (distancia1>50)&&(distancia2<50) // Se tiver perto do sensor 2
   {
-    escolhedor = 10
+    escolhedor = 10 // vira a esquerda
   }
-  if (distancia1>50)&&(distancia2>50)
+  if (distancia1>50)&&(distancia2>50) // Nenhum sensor perto
   {
-    escolhedor = 11
+    escolhedor = 11 // Segue em frente
   }
 }
 
+// Conta o tempo que o sensor 1 recebeu echo (saber a distancia)
 void conta1()
 {
   tempo1 = pulseIn(PINO_ECHO_SENSOR1, HIGH) // Conta o tON de echo em microsegundos
-  calcula1();
+  calcula1(); // Chama a função calcula, para calcular a distancia a partir do tempo
 }
 
+// Conta o tempo que o sensor 2 recebeu echo (saber a distancia)
 void conta2()
 {
   tempo2 = pulseIn(PINO_ECHO_SENSOR2, HIGH) // Conta o tON de echo em microsegundos
-  calcula2();
+  calcula2();// Chama a função calcula, para calcular a distancia a partir do tempo
 }
 
 void pulsa_sensor1()
@@ -64,55 +70,62 @@ void pulsa_sensor2()
   conta2();
 }
 
+// A partir do tempo, calcula a distancia do objeto no sensor 1
 void calcula1()
 {
   tempo1/58      = distancia1  // em cm (formula fabricante)
 }
 
+// A partir do tempo, calcula a distancia do objeto no sensor 2
 void calcula2()
 {
   tempo2/58   = distancia2  // em cm (formula fabricante)
 
 }
 
+// Faz o motor seguir para a esquerda
 void motor_esquerda()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade)
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
- analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação ao contraria (da padrão), já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
 }
 
+// Faz o motor seguir para a direita
 void motor_direita()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade)
- analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)
- analogWrite(PINO_GND_MOTOR_DIREITO, 0) 
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
+// Faz o motor seguir para a frente
 void motor_frente()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade)
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)
- analogWrite(PINO_GND_MOTOR_DIREITO, 0) 
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
+// Faz o motor parar
 void motor_para()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
- analogWrite(PINO_GND_MOTOR_DIREITO, 0)
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
+// Faz o motor rodar ao contrario
 void motor_re()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)
- analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade)
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0)
- analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
 }
 
 void setup() 
@@ -155,7 +168,7 @@ void loop()
  pulsa_sensor2();
  escolhe();
  
- switch (escolhedor)
+ switch (escolhedor) // de acordo com o numero recebido na função escolhe, toma-se a decisão, indicando os passos do motor.
  {
    case 00
    motor_para();
