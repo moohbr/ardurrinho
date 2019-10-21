@@ -47,7 +47,7 @@ void conta1()
 void conta2()
 {
   tempo2 = pulseIn(PINO_ECHO_SENSOR2, HIGH) // Conta o tON de echo em microsegundos
-  calcula2();// Chama a função calcula, para calcular a distancia a partir do tempo
+  calcula2(); // Chama a função calcula, para calcular a distancia a partir do tempo
 }
 
 void pulsa_sensor1()
@@ -74,74 +74,85 @@ void pulsa_sensor2()
 void calcula1()
 {
   tempo1/58      = distancia1  // em cm (formula fabricante)
+  velocidade=distancia1*10
 }
 
 // A partir do tempo, calcula a distancia do objeto no sensor 2
 void calcula2()
 {
   tempo2/58   = distancia2  // em cm (formula fabricante)
-
+  velocidade=distancia2*10
 }
 
 // Faz o motor seguir para a esquerda
 void motor_esquerda()
 {
+ //digitalWrite(PINO_ENABLE_MOTOR_ESQUERDO, 0) Desliga motor esquerdo
+ //digitalWrite(PINO_ENABLE_MOTOR_DIREITO, 0)  Desliga motor direito
  analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação ao contraria (da padrão), já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
- analogWrite(PINO_GND_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)          // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)           // Faz o motor seguir em sua rotação ao contraria (da padrão), já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)  // Como a saida analogica, se controla a potencia do motor
 }
 
 // Faz o motor seguir para a direita
 void motor_direita()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ //digitalWrite(PINO_ENABLE_MOTOR_ESQUERDO, 0) Desliga motor esquerdo
+ //digitalWrite(PINO_ENABLE_MOTOR_DIREITO, 0)  Desliga motor direito
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)          // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
  analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)  // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0)           // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
 // Faz o motor seguir para a frente
 void motor_frente()
 {
+ digitalWrite(PINO_ENABLE_MOTOR_ESQUERDO, 1)      // Liga motor esquerdo
+ digitalWrite(PINO_ENABLE_MOTOR_DIREITO, 1)       // Liga motor direito
  analogWrite(PINO_VCC_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
- analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)          // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, velocidade)  // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0)           // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
 // Faz o motor parar
 void motor_para()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
- analogWrite(PINO_GND_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
- analogWrite(PINO_GND_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ digitalWrite(PINO_ENABLE_MOTOR_ESQUERDO, 0) // Desliga motor esquerdo
+ digitalWrite(PINO_ENABLE_MOTOR_DIREITO, 0)  // Desliga motor direito
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)     // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
+ analogWrite(PINO_GND_MOTOR_ESQUERDO, 0)     // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)      // Como a saida analogica, se controla a potencia do motor. Nesse caso, está parado
+ analogWrite(PINO_GND_MOTOR_DIREITO, 0)      // Faz o motor seguir em sua rotação padrão, já que o 0 (nivel logico baixo/referencial) esta no GND do motor
 }
 
 // Faz o motor rodar ao contrario
 void motor_re()
 {
- analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_VCC_MOTOR_ESQUERDO, 0)          // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
  analogWrite(PINO_GND_MOTOR_ESQUERDO, velocidade) // Como a saida analogica, se controla a potencia do motor
- analogWrite(PINO_VCC_MOTOR_DIREITO, 0) // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
- analogWrite(PINO_GND_MOTOR_DIREITO, velocidade) // Como a saida analogica, se controla a potencia do motor
+ analogWrite(PINO_VCC_MOTOR_DIREITO, 0)           // Faz o motor seguir em sua rotação ao contraria, já que o 0 (nivel logico baixo/referencial) esta no VCC do motor
+ analogWrite(PINO_GND_MOTOR_DIREITO, velocidade)  // Como a saida analogica, se controla a potencia do motor
 }
 
 void setup() 
 {
-// Bibliotecas
 
-  
+// Bibliotecas 
+
 // Define's para a escrita do codigo ficar mais legivel e facil
-#define PINO_TRIGGER_SENSOR1     02 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR1        04 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_TRIGGER_SENSOR2     07 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR2        08 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_VCC_MOTOR_ESQUERDO  03 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_VCC_MOTOR_DIREITO   05 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_GND_MOTOR_ESQUERDO  06 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_GND_MOTOR_DIREITO   09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_TRIGGER_SENSOR1       03 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR1          04 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_TRIGGER_SENSOR2       11 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
+#define PINO_ECHO_SENSOR2          12 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
+#define PINO_VCC_MOTOR_ESQUERDO    06 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_VCC_MOTOR_DIREITO     09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_ESQUERDO    08 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_GND_MOTOR_DIREITO     09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
+#define PINO_ENABLE_MOTOR_ESQUERDO 05 // PARA DESLIGAR O MOTOR ESQUERDO
+#define PINO_ENABLE_MOTOR_DIREITO  10 // PARA DESLIGAR O MOTOR ESQUERDO
 
 // Configurar as portas como entrada e saídas
 pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
@@ -150,20 +161,21 @@ pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o se
 pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
 
 // Ativar interrupção
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
+//attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
+//attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
 
 // Variaveis auxiliares
-int tempo1       = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 1
-int tempo2       = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 2
-int velocidade   = 0;      // Variavel para determinar a velocidade a qual os motores rodarao
-float distancia1 = 0;      // Variavel para receber a distancia do objeto do sensor 1
-float distancia2 = 0;      // Variavel para receber a distancia do objeto do sensor 2
-int escolhedor   = 0;      // Variavel para escolher o que os motores irão fazer
+int tempo1       = 00;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 1
+int tempo2       = 00;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 2
+int velocidade   = 00;      // Variavel para determinar a velocidade a qual os motores rodarao
+float distancia1 = 00;      // Variavel para receber a distancia do objeto do sensor 1
+float distancia2 = 00;      // Variavel para receber a distancia do objeto do sensor 2
+int escolhedor   = 00;      // Variavel para escolher o que os motores irão fazer
 }
 
 void loop() 
 {
+
  pulsa_sensor1();
  pulsa_sensor2();
  escolhe();
