@@ -1,0 +1,171 @@
+// Firmware de Integração dos Atuadores e Sensores
+// Carro Desviando de Obstáculos
+// 
+
+//******************************************************************************************
+// Definições de Constantes
+#define trigE  3                 // Pino 13 Trigger Sensor Esquerda
+#define echoE  4                 // Pino 12 Echo Sensor Esquerda
+#define trigD 12                 // Pino 11 Trigger Sensor Direita 
+#define echoD 11                 // Pino 13 Echo Sensor Direita 
+#define ENA   10                 // Pino de habilitação do motor A da Direita
+#define IN1    9                 // Pino de ativação Motor A no sentido Anti-Horário  
+#define IN2    8                 // Pino de ativação Motor A no sentido Horário   
+#define IN3    7                 // Pino de ativação Motor B no sentido Anti-Horário   
+#define IN4    6                 // Pino de ativação Motor B no sentido Horário  
+#define ENB    5                 // Pino de habilitação do motor B da Esquerda   
+
+//******************************************************************************************
+// Protótipos de Funções Auxiliares 
+int sensorE(void);               // Retorna a distância do obstáculo 1 em milimetros    
+int sensorD(void);               // Retorna a distância do obstáculo 1 em milimetros 
+void movAvante(unsigned char);   // Aciona motores para avançar em linha reta
+void movRe(unsigned char);       // Aciona motores para recuar  em curva
+void movCurvaDireita(void);      // Aciona motores para desviar à direita 
+void movCurvaEsquerda(void);     // Aciona motores para desviar à esqueda 
+
+//******************************************************************************************
+// Variáveis Globais
+int distE, distD;
+
+//******************************************************************************************
+// Configurações de Inicialização do Arduino  
+void setup()  
+{  
+   Serial.begin(9600);   
+   pinMode(trigE,  OUTPUT);
+   pinMode(trigD,  OUTPUT);
+   pinMode(echoE, INPUT); 
+   pinMode(echoD, INPUT); 
+   pinMode(IN1, OUTPUT); 
+   pinMode(IN2, OUTPUT); 
+   pinMode(IN3, OUTPUT); 
+   pinMode(IN4, OUTPUT);  
+   pinMode(ENA, OUTPUT);    
+   pinMode(ENB, OUTPUT);  
+
+   movAvante(0);
+   delay(5000);
+   movAvante(120);
+   delay(500); 
+   movRe(120);
+   delay(500);
+   movAvante(0);  
+}  
+
+//******************************************************************************************
+// Lógica Principal em Execução Cíclica  
+void loop()  
+{  
+
+    distE = sensorE(); 
+    delay(10); 
+    distD = sensorD(); 
+    delay(10);     
+
+    Serial.print("Sensor E: ");  
+    Serial.print(distE);
+    Serial.print("\tSensor D: ");  
+    Serial.println(distD);  
+//||
+     
+  if ((distE==0)&&(distE==0)&&(distD==0)&&(distD==00))
+    {
+       movAvante(120); 
+       delay(300);
+    } 
+    if ((distE>200)&&(distE<300)&&(distD>200)&&(distD<300))
+    {
+       movAvante(120); 
+       delay(300);
+       movAvante(0);
+       delay(300);
+    } 
+
+    if ((distE>150)&&(distE<200)&&(distD>150)&&(distD<200))
+    {
+       movRe(120); 
+       delay(300);
+       movAvante(0);
+       delay(300);
+    } 
+
+    if((distE>20)&&(distE<100))
+    {
+       movCurvaDireita();
+       delay(300);
+       movAvante(0); 
+       delay(300);
+    }   
+    
+    if((distD>20)&&(distD<100))
+    {
+       movCurvaEsquerda();  
+       delay(300);
+       movAvante(0);
+       delay(300);   
+    } 
+} 
+
+//******************************************************************************************
+// Implementações das Funções Auxiliares do Projeto
+
+int sensorE(void)
+{ 
+    digitalWrite(trigE, HIGH);   
+    delayMicroseconds(10);   
+    digitalWrite(trigE, LOW);  
+    return(10*pulseIn(echoE,HIGH,3500)/58); // milimetros 
+}
+
+int sensorD(void)
+{ 
+    digitalWrite(trigD, HIGH);   
+    delayMicroseconds(10);   
+    digitalWrite(trigD, LOW);  
+    return(10*pulseIn(echoD,HIGH,3500)/58); // milimetros  
+}
+
+void movAvante(unsigned char vel)
+{
+   analogWrite(ENA,vel); 
+   analogWrite(ENB,vel);
+
+   digitalWrite(IN1, LOW); 
+   digitalWrite(IN2, HIGH);
+   digitalWrite(IN3, LOW); 
+   digitalWrite(IN4, HIGH);
+}
+
+void movRe(unsigned char vel)
+{
+   analogWrite(ENA,vel); 
+   analogWrite(ENB,vel);
+   
+   digitalWrite(IN1, HIGH); 
+   digitalWrite(IN2, LOW);
+   digitalWrite(IN3, HIGH); 
+   digitalWrite(IN4, LOW);
+}
+
+void movCurvaDireita()
+{
+   analogWrite(ENA,150);
+   analogWrite(ENB,150);
+ 
+   digitalWrite(IN1, HIGH); 
+   digitalWrite(IN2, LOW);
+   digitalWrite(IN3, LOW); 
+   digitalWrite(IN4, HIGH);
+}
+
+void movCurvaEsquerda()
+{
+   analogWrite(ENA,150);
+   analogWrite(ENB,150);
+
+   digitalWrite(IN1, LOW); 
+   digitalWrite(IN2, HIGH);
+   digitalWrite(IN3, HIGH); 
+   digitalWrite(IN4, LOW);
+}
