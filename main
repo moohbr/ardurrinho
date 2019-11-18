@@ -1,124 +1,170 @@
-/*
+// Firmware de Integração dos Atuadores e Sensores
+// Carro Desviando de Obstáculos
+//
 
-*/
+//******************************************************************************************
+// Definições de Constantes
+#define trigE  3                 // Pino Trigger Sensor Esquerda
+#define echoE  4                 // Pino Echo Sensor Esquerda
+#define trigD 12                 // Pino Trigger Sensor Direita 
+#define echoD 11                 // Pino Echo Sensor Direita 
+#define ENA   10                 // Pino de habilitação do motor da Direita
+#define IN1    9                 // Pino de ativação Motor da direita no sentido Anti-Horário  
+#define IN2    8                 // Pino de ativação Motor da direita no sentido Horário   
+#define IN3    7                 // Pino de ativação Motor da esquerda no sentido Anti-Horário   
+#define IN4    6                 // Pino de ativação Motor da esquerda no sentido Horário  
+#define ENB    5                 // Pino de habilitação do motor da Esquerda   
 
-void conta1()
+//******************************************************************************************
+// Protótipos de Funções Auxiliares
+int sensorE(void);               // Retorna a distância do obstáculo em milimetros
+int sensorD(void);               // Retorna a distância do obstáculo em milimetros
+void movAvante(unsigned char);   // Aciona motores para avançar em linha reta
+void movRe(unsigned char);       // Aciona motores para recuar  em curva
+void movCurvaDireita(void);      // Aciona motores para desviar à direita
+void movCurvaEsquerda(void);     // Aciona motores para desviar à esqueda
+
+//******************************************************************************************
+// Variáveis Globais
+int distE, distD;
+
+//******************************************************************************************
+// Configurações de Inicialização do Arduino
+void setup()
 {
-  delayMicroseconds(4); // Conta 4 microsegundos
-  contador1++;          // Conta o numero de vezes que passou pela funcao
-  
+  Serial.begin(9600);
+  pinMode(trigE,  OUTPUT);
+  pinMode(trigD,  OUTPUT);
+  pinMode(echoE, INPUT);
+  pinMode(echoD, INPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  movAvante(0);
+  delay(5000);
+  movAvante(120);
+  delay(500);
+  movRe(120);
+  delay(500);
+  movAvante(0);
 }
 
-void conta2()
+//******************************************************************************************
+// Lógica Principal em Execução Cíclica
+void loop()
 {
-  delayMicroseconds(4); // Conta 4 microsegundos
-  contador2++;          // Conta o numero de vezes que passou pela funcao
-}
 
-void pulsa_sensor1()
-{
-  digitalWrite(PINO_TRIGGER_SENSOR1, HIGH);   // Ativa o pino 7, triggando o sensor 1
-  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
-  digitalWrite(PINO_TRIGGER_SENSOR1, LOW);    // Desativa o pino 7, destriggando o sensor 1 
-}
+  distE = sensorE();
+  delay(10);
+  distD = sensorD();
+  delay(10);
 
-void pulsa_sensor2()
-{
-  digitalWrite(PINO_TRIGGER_SENSOR2, HIGH);   // Ativa o pino 4, triggando o sensor 1
-  delayMicroseconds(10);                      // Ativa o delay necessario para o sensor reconhecer o trigger ATENÇÃO: VERIFICAR SE A INTERRUPÇÃO ESTA ATIVA
-  digitalWrite(PINO_TRIGGER_SENSOR2, LOW);    // Desativa o pino 4, destriggando o sensor 1 
-}
+  Serial.print("Sensor E: ");
+  Serial.print(distE);
+  Serial.print("\tSensor D: ");
+  Serial.println(distD);
+  //||
 
-void borda_sensor1()
-{ 
-  borda1 = digitalRead(PINO_ECHO_SENSOR1); // Ler o pino ECHO
-  if ((borda1ant == 0) && (borda1 == 1)){  // Se ouve borda de subida
-    borda1ant = borda1;                    // Salva que ouve borda de subida
-    conta1;                                // Conta o tON de ECHO
-  else
-    if (borda1ant == 1) && (borda1 == 0)){ // Se ouve borda de descida
-      calcula1;                            // Calcula o tON de echo
-    }
+
+  if ((distD == 0) && (distE == 0) || (distD == 0) && (distE > 170) || (distD > 170) && (distE == 0) || (distD > 170) && (distE > 170)) // Anda para frente
+  {
+    movAvante(255);
+    delay(50);
+    Serial.println("va em frente");
+  }
+  if ((distE > 0) && (distE < 170) && (distD > 170) || (distE > 0) && (distE < 170) && (distD == 0)) // Vira para direita
+  {
+    movCurvaDireita();
+    delay(400);
+    movAvante(0);
+    delay(0);
+    Serial.println("vire a direita");
+  }
+
+  if ((distD > 0) && (distD < 170) && (distE > 170) || (distD > 0) && (distD < 170) && (distE == 0)) // Vira para esquerda
+  {
+    movCurvaEsquerda();
+    delay(400);
+    movAvante(0);
+    delay(0);
+    Serial.println("vire a esquerda");
+  }
+
+  if ((distE > 0) && (distE < 170) && (distD > 0) && (distD < 170)) // DA RÈ
+  {
+    movRe(120);
+    delay(400);
+    movAvante(0);
+    delay(0);
+    Serial.println("dê ré");
   }
 }
 
-void borda_sensor2()
+//******************************************************************************************
+// Implementações das Funções Auxiliares do Projeto
+
+int sensorE(void)
 {
-  borda2 = digitalRead(PINO_ECHO_SENSOR2); // Ler o pino ECHO
-  if ((borda2ant == 0) && (borda2 == 1)){  // Se ouve borda de subida
-    borda2ant = borda2;                    // Salva que ouve borda de subida
-    conta2;                                // Conta o tON de ECHO
-  else
-    if (borda2ant == 1) && (borda2 == 0)){ // Se ouve borda de descida
-      calcula2;                            // Calcula o tON de echo
-    }
-  }
+  digitalWrite(trigE, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigE, LOW);
+  return (10 * pulseIn(echoE, HIGH, 3500) / 58); // milimetros
 }
 
-void calcula1()
+int sensorD(void)
 {
-  contador1*4      = tempo1       // em microsegundos
-  tempo1*340       = distancia1  // em cm
-  contador1        = 0          // reinicia a contagem
+  digitalWrite(trigD, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigD, LOW);
+  return (10 * pulseIn(echoD, HIGH, 3500) / 58); // milimetros
 }
 
-void calcula2()
+void movAvante(unsigned char vel)
 {
-  contador2*4  = tempo2       // em microsegundos
-  tempo2*340   = distancia2  // em cm
-  contador2    = 0      // reinicia a contagem
+  int vel2 = 0;
+  vel2 = vel - 10;
+  analogWrite(ENA, vel);
+  analogWrite(ENB, vel2);
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
 }
 
-void motor_esquerdo()
+void movRe(unsigned char vel)
 {
+  analogWrite(ENA, vel);
+  analogWrite(ENB, vel);
 
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
 }
 
-void motor_direito()
+void movCurvaDireita()
 {
-  
+  analogWrite(ENA, 150);
+  analogWrite(ENB, 150);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
 }
 
-void setup() 
+void movCurvaEsquerda()
 {
-// Bibliotecas
+  analogWrite(ENA, 150);
+  analogWrite(ENB, 150);
 
-  
-// Define's para a escrita do codigo ficar mais legivel e facil
-#define PINO_TRIGGER_SENSOR1     02 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR1        04 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_TRIGGER_SENSOR2     07 // TRIGGER PRECISA ENVIAR +VCC PARA O SENSOR DURANTE 10us
-#define PINO_ECHO_SENSOR2        08 // ECHO PRECISA RECEBER A ONDA EM PWM COM O TEMPO(DISTANCIA) DO OBJETO
-#define PINO_VCC_MOTOR_ESQUERDO  03 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_VCC_MOTOR_DIREITO   05 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_GND_MOTOR_ESQUERDO  06 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-#define PINO_GND_MOTOR_DIREITO   09 // PARA CONTROLAR A POTENCIA DO MOTOR, NECESSITA DE UM PINO COM PWM
-
-// Configurar as portas como entrada e saídas
-pinMode(PINO_TRIGGER_SENSOR1, OUTPUT); // Ativa o pino 7 como saída (ativa o sensor/trigger)
-pinMode(PINO_ECHO_SENSOR1,     INPUT); // Ativa o pino 6 como entrada (conta o tempo/echo)
-pinMode(PINO_TRIGGER_SENSOR2, OUTPUT); // Ativa o pino 4 como saída (ativa o sensor/trigger)
-pinMode(PINO_ECHO_SENSOR2,     INPUT); // Ativa o pino 5 como entrada (conta o tempo/echo)
-
-// Ativar interrupção
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR1), borda_sensor1, CHANGE); // Ativa interrupção no sensor 1
-attachInterrupt(digitalPinToInterrupt(PINO_ECHO_SENSOR2), borda_sensor2, CHANGE); // Ativa interrupção no sensor 2
-
-// Variaveis auxiliares
-int borda1      = 0;      // Variavel para guardar o valor novo da borda do sensor 1
-int borda1ant   = 0;      // Variavel para guardar o valor velho da borda do sensor 1
-int borda2      = 0;      // Variavel para guardar o valor novo da borda do sensor 2
-int borda2ant   = 0;      // Variavel para guardar o valor velho da borda do sensor 2
-int contador1   = 0;      // Variavel para contar o tempo que o ECHO ficou ativo no sensor 1
-int contador2   = 0;      // Variavel para contar o tempo que o ECHO ficou ativo no sensor 2
-int tempo1      = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 1
-int tempo2      = 0;      // Variavel para receber o tempo que o ECHO ficou ativo no sensor 2
-
-}
-
-void loop() 
-{
-
-    
-    
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
 }
