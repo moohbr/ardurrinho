@@ -44,13 +44,7 @@ void setup()
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
 
-  movAvante(0);
-  delay(5000);
-  movAvante(120);
-  delay(500);
-  movRe(120);
-  delay(500);
-  movAvante(0);
+
 }
 
 //******************************************************************************************
@@ -65,41 +59,39 @@ void loop()
 
   Serial.print("Sensor E: ");
   Serial.print(distE);
-  Serial.print("\tSensor D: ");
+  Serial.print("  Sensor D: ");
   Serial.println(distD);
+  //delay(1000);
   //||
 
 
-  if ((distD == 0) && (distE == 0) || (distD == 0) && (distE > 170) || (distD > 170) && (distE == 0) || (distD > 170) && (distE > 170)) // Anda para frente
+  if ((distD == 0) && (distE == 0) || (distD == 0) && (distE > 200) || (distD > 200) && (distE == 0) || (distD > 200) && (distE > 200)) // Anda para frente
   {
-    movAvante(255);
+    movAvante(190);
     delay(50);
     Serial.println("va em frente");
   }
-  if ((distE > 0) && (distE < 170) && (distD > 170) || (distE > 0) && (distE < 170) && (distD == 0)) // Vira para direita
+  if (  ((distE > 0) && (distE < 200 )) && (distD > 200) || ( (distE > 0 ) && (distE < 200) && (distD == 0) ) ) // Vira para direita
   {
     movCurvaDireita();
-    delay(400);
+    delay(150);
     movAvante(0);
-    delay(0);
+    delay(10);
     Serial.println("vire a direita");
   }
 
-  if ((distD > 0) && (distD < 170) && (distE > 170) || (distD > 0) && (distD < 170) && (distE == 0)) // Vira para esquerda
+  if ( ( ( (distD > 0) && (distD < 200) ) && (distE > 200) ) || ( ( (distD > 0) && (distD < 200) )&& (distE == 0) ) ) // Vira para esquerda
   {
     movCurvaEsquerda();
-    delay(400);
+    delay(150);
     movAvante(0);
-    delay(0);
+    delay(10);
     Serial.println("vire a esquerda");
   }
-
-  if ((distE > 0) && (distE < 170) && (distD > 0) && (distD < 170)) // DA RÈ
+  if ( ( (distE > 0) && (distE < 200) )&& ( (distD > 0) && (distD < 200) ) ) // DA RÈ
   {
     movRe(120);
     delay(400);
-    movAvante(0);
-    delay(0);
     Serial.println("dê ré");
   }
 }
@@ -123,13 +115,16 @@ int sensorD(void)
   return (10 * pulseIn(echoD, HIGH, 3500) / 58); // milimetros
 }
 
+#define IN1    9                 // Pino de ativação Motor da direita no tras
+#define IN2    8                 // Pino de ativação Motor da direita frent
+#define IN3    7                 // Pino de ativação Motor da esquerda tras  
+#define IN4    6                 // Pino de ativação Motor da esquerda frent 
+
 void movAvante(unsigned char vel)
 {
-  int vel2 = 0;
-  vel2 = vel - 10;
   analogWrite(ENA, vel);
-  analogWrite(ENB, vel2);
-
+  analogWrite(ENB, vel);
+  Serial.println("1");
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
@@ -140,7 +135,7 @@ void movRe(unsigned char vel)
 {
   analogWrite(ENA, vel);
   analogWrite(ENB, vel);
-
+  Serial.println("2");
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, HIGH);
@@ -149,9 +144,9 @@ void movRe(unsigned char vel)
 
 void movCurvaDireita()
 {
-  analogWrite(ENA, 150);
+  analogWrite(ENA, 100);
   analogWrite(ENB, 150);
-
+  Serial.println("3");
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
@@ -161,8 +156,8 @@ void movCurvaDireita()
 void movCurvaEsquerda()
 {
   analogWrite(ENA, 150);
-  analogWrite(ENB, 150);
-
+  analogWrite(ENB, 100);
+  Serial.println("foi");
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
