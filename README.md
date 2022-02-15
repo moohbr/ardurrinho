@@ -1,2 +1,2 @@
 # Ardurrinho
-Projeto para a matéria de Introdução a Programação do curso de Engenharia da Eletrônica e de Telecomunicações para o 2º semestre do ano de 2019
+Project for the subject of Introduction to Programming of the Electronics and Telecommunications Engineering course at PUC-MG for the 2nd semester of 2019
